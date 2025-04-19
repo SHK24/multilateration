@@ -30,9 +30,6 @@ add_executable(PseudorangeMultilateration
     test/main.cpp
     )
 
-# Add the executable for testing
-#add_executable(TestApp test/main.cpp)
-
 # Link the library to the executable
 target_link_libraries(PseudorangeMultilateration Eigen3::Eigen)
 target_link_libraries(PseudorangeMultilateration ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
