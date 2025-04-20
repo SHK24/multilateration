@@ -1,4 +1,3 @@
-```markdown
 # PseudorangeMultilateration
 
 ## Требования
@@ -80,12 +79,17 @@
 ```
 
 Возможно использование аргементов командной строки для выбора алгоритмов решения. Можно указать список с помощью имен алгоритмов:
-"Bancroft"
-"Beck"
-"Grad"
-"Linear"
-"LSQ" 
-"RTK"
-"Simple"
-Пример запуска: ./PseudorangeMultilateration RTK Bancroft
+- "Bancroft"
+- "Beck"
+- "Grad"
+- "Linear"
+- "LSQ" 
+- "RTK"
+- "Simple"
+
+Пример запуска: 
+```bash
+./PseudorangeMultilateration RTK Bancroft
+```
+
 Если не указано ни одного алгоритма, то будут выбраны все
