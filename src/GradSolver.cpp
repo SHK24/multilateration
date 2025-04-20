@@ -1,8 +1,7 @@
-#include "../inc/GradSolver.h"
+#include "GradSolver.h"
 
 
-
-Vector3d calculate_delta(const Vector3d& target, const std::vector<LocatorData>& locators, double step) {
+ Vector3d GradSolver::calculate_delta(const Vector3d& target, const std::vector<LocatorData>& locators, double step) {
     Vector3d delta;
     for (const auto& locator : locators) {
         const double dist = target.distance(locator.position);
@@ -17,12 +16,14 @@ Vector3d calculate_delta(const Vector3d& target, const std::vector<LocatorData>&
     return delta;
 }
 
-Vector3d locate_grad(const std::vector<LocatorData>& locators) {
+Vector3d GradSolver::locate_grad(const std::vector<LocatorData>& locators) {
     constexpr int iter_count = 2000;
     constexpr double first_step = 3;
     constexpr double step_scale = 0.99;
 
-    Vector3d target = locate_simple(locators);
+    SimpleSolver tempSimpleSolver;
+
+    Vector3d target = tempSimpleSolver.locate_simple(locators);
     double step = first_step;
     for (int iter = 0; iter < iter_count; ++iter) {
         Vector3d delta = calculate_delta(target, locators, step);
@@ -32,7 +33,7 @@ Vector3d locate_grad(const std::vector<LocatorData>& locators) {
     return target;
 }
 
-Vector3d locate_grad_slow(const std::vector<LocatorData>& locators) {
+Vector3d GradSolver::locate_grad_slow(const std::vector<LocatorData>& locators) {
     constexpr int iter_count = 200000;
     constexpr double first_step = 3;
     constexpr double step_scale = 0.9999;

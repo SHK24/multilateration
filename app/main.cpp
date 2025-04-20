@@ -3,6 +3,7 @@
 #include "solver.h"
 #include "BancroftSolver.h"
 #include "BeckSolver.h"
+#include "GradSolver.h"
 #include "LinearSolver.h"
 #include "LSQSolver.h"
 #include "RtkLibSolver.h"
@@ -24,25 +25,40 @@ void PrintStatisticsPoints(const std::vector<StatisticsPoint>& stat_graph, std::
     }
 }
 
-int main() {
-    RandomSceneGenerator generator(666);
-    const vector<Solver> solvers{
+// Функция для инициализации вектора решателей
+std::vector<Solver> initialize_solvers() {
+    return {
         {BancroftSolver::locate_bancroft, "Bancroft" },
         {BeckSolver::locate_beck, "Beck" },
+        {GradSolver::locate_grad, "Grad" },
         {LinearSolver::locate_linear, "Linear" },
         {LSQSolver::locate_LSQ, "LSQ" },
         {RtkLibSolver::locate_rtk_lsq, "RTK"},
         {SimpleSolver::locate_simple, "Simple"}
     };
+}
 
-    // TestMethodError(generator, eigen_solver);
-    // TestNoiseError(generator, eigen_solver, 3, 0, 200, 100);
+int main(int argc, char* argv[]) {
+    RandomSceneGenerator generator(666);
 
-    //const Solver simple(LSQSolver::locate_rtk_lsq, "rtk_lsq");
-    const Solver banckroft(BancroftSolver::locate_bancroft, "Bancroft");
+    std::vector<Solver> all_solvers = initialize_solvers();
+    std::vector<Solver> selected_solvers;
 
+    // Обработка аргументов командной строки
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        for (const auto& solver : all_solvers) {
+            if (arg == solver.GetDesignator()) {
+                selected_solvers.push_back(solver);
+                break;
+            }
+        }
+    }
 
-    std::cout << SolveSimpleCase(solvers[0]) << '\n';
+    //Если не указаны решатели, используем все
+    if (selected_solvers.empty()) {
+        selected_solvers = all_solvers;
+    }
 
     std::string base_filename = "zhil_lin_simp_";
     std::string tail_filename = "loc_1200km_log100.txt";
@@ -56,11 +72,9 @@ int main() {
             std::cout << "Unable to open file \"" << dyn_filename << "\" !\n";
             continue;
         }
-        const vector<StatisticsPoint> stat_graph = CompareDeviationErrorsInMethods(locators_count, solvers, generator);
+        const vector<StatisticsPoint> stat_graph = CompareDeviationErrorsInMethods(locators_count, selected_solvers, generator);
         PrintStatisticsPoints(stat_graph, file);
     }
-
-    printf("THE END\n");
 
     return 0;
 }

@@ -155,8 +155,11 @@
                         stats
                 };
                 counter++;
-                std::cout << counter << "/" << noisy_selection.size() << "\n";
+                std::cout << "                                                                   \r";
+                std::cout << "Processing progress: " << counter << "/" << noisy_selection.size() ;
+                std::fflush(stdout);
             }
+            std::cout << std::endl;
         }
         return stat_graph;
     }
