@@ -87,3 +87,5 @@
 "LSQ" 
 "RTK"
 "Simple"
+Пример запуска: ./PseudorangeMultilateration RTK Bancroft
+Если не указано ни одного алгоритма, то будут выбраны все
