@@ -5,10 +5,12 @@
 #include "BeckSolver.h"
 #include "GradSolver.h"
 #include "LinearSolver.h"
+#include "LinearSolver_mul2.h"
 #include "LSQSolver.h"
 #include "RtkLibSolver.h"
 #include "ZhilSolver.h"
 #include "SimpleSolver.h"
+#include "SimpleSolver_mul2.h"
 
 #include <fstream>
 #include <filesystem>
@@ -17,9 +19,9 @@
 
 void PrintStatisticsPoints(const std::vector<StatisticsPoint>& stat_graph, std::ostream& ostream) {
     for (const auto& point : stat_graph) {
-        ostream << point.deviation << " ";
+        ostream << point.deviation << ";";
         for (const auto& stat : point.stats) {
-            ostream << stat.stat.avg / point.deviation << " ";
+            ostream << stat.stat.avg / point.deviation << ";";
         }
         ostream << '\n';
     }
@@ -32,9 +34,12 @@ std::vector<Solver> initialize_solvers() {
         {BeckSolver::locate_beck, "Beck" },
         {GradSolver::locate_grad, "Grad" },
         {LinearSolver::locate_linear, "Linear" },
+        {LinearSolver_mul2::locate_linear, "Linear_mul2" },
         {LSQSolver::locate_LSQ, "LSQ" },
         {RtkLibSolver::locate_rtk_lsq, "RTK"},
-        {SimpleSolver::locate_simple, "Simple"}
+        {SimpleSolver::locate_simple, "Simple"},
+        {SimpleSolver_mul2::locate_simple, "Simple_mul2"},
+        {ZhilSolver::locate_zhil, "Zhil"}
     };
 }
 
@@ -60,8 +65,8 @@ int main(int argc, char* argv[]) {
         selected_solvers = all_solvers;
     }
 
-    std::string base_filename = "zhil_lin_simp_";
-    std::string tail_filename = "loc_1200km_log100.txt";
+    std::string base_filename = "plot_data";
+    std::string tail_filename = ".txt";
     //for (int locators_count : {3, 4, 5, 6, 7, 10, 20, 100}) {
     for (int locators_count : { 3 }) {
         std::string dyn_filename = base_filename;
@@ -73,6 +78,15 @@ int main(int argc, char* argv[]) {
             continue;
         }
         const vector<StatisticsPoint> stat_graph = CompareDeviationErrorsInMethods(locators_count, selected_solvers, generator);
+        
+        file << "dev;";
+
+        for (const auto& solver : selected_solvers) {
+                const std::string solver_name = solver.GetDesignator();
+                file << solver_name << ";";
+        }
+        file << "\n";
+        
         PrintStatisticsPoints(stat_graph, file);
     }
 

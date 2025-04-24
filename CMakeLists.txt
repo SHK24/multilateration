@@ -38,6 +38,7 @@ add_executable(PseudorangeMultilateration
     src/BancroftSolver.cpp
     src/BeckSolver.cpp
     src/GradSolver.cpp
+    src/LinearSolver.cpp
     src/LinearSolver_mul2.cpp
     src/LSQSolver.cpp
     src/RtkLibSolver.cpp

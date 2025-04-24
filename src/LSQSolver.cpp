@@ -16,7 +16,7 @@ Vector3d LSQSolver::locate_LSQ(const std::vector<LocatorData>& locators)
     for (int i = 0; i < n; ++i) {
         position_mat.row(i) << locators[i].position.x(), locators[i].position.y(), locators[i].position.z();
     }
-    position_mat *= 2;
+    //position_mat *= 2;
 
     Eigen::VectorXd value_column(n);
     for (int i = 0; i < n; ++i)

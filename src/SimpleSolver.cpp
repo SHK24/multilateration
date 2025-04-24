@@ -12,7 +12,7 @@ Vector3d SimpleSolver::locate_simple(const std::vector<LocatorData>& locators) {
 
     //std::cout << "Matrix:\n" << position_mat << std::endl;
 
-    position_mat *= 2;
+    //position_mat *= 2;
 
     Eigen::VectorXd value_column(n);
     for (int i = 0; i < n; ++i) {
